@@ -1,0 +1,168 @@
+<html>
+    <head>
+    </head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-analytics.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-database.js"></script>
+        <script src="firebase.js"></script>
+        <script>
+            // Your web app's Firebase configuration
+    var firebaseConfig = {
+    apiKey: "AIzaSyAl7M57kUhkIqtC6qQHoPTVoLoUVpzJFww",
+    authDomain: "alumni-1b987.firebaseapp.com",
+    databaseURL: "https://alumni-1b987.firebaseio.com",
+    projectId: "alumni-1b987",
+    storageBucket: "alumni-1b987.appspot.com",
+    messagingSenderId: "462415600832",
+    appId: "1:462415600832:web:1e59f6138796f05c91a125",
+    measurementId: "G-SC8PCL7EFJ"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+//   count_status();
+  
+//   var uid;
+//   var cur_email;
+//   firebase.auth().onAuthStateChanged(function(user) {
+// 				  if (user) {
+// 				    // User is signed in.
+// 				    cur_email = user.email;
+//                      uid = user.uid; 
+// 				  }
+//        });
+
+ 
+// var cur_email;
+//   var task=window.localStorage.getItem("task");
+//   firebase.auth().onAuthStateChanged(function(user) {
+// 				  if (user) {
+// 				    // User is signed in.
+// 				    cur_email = user.email;
+// 				     uid = user.uid;
+//                      console.log(uid);
+// 				  }
+// 				});
+     </script>
+    <script type="text/javascript">
+
+
+        
+    var uid="5qfIIGU7RrV71YDjvO0H8Ce7uzd2";
+
+
+   
+google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+            var student= window.localStorage.getItem("student");	
+            var job=window.localStorage.getItem("job");	
+            var prof=window.localStorage.getItem("professor");	
+            var mentor=window.localStorage.getItem("mentor");	
+            var business=window.localStorage.getItem("business");
+            var investor=window.localStorage.getItem("investor");
+
+        
+        var data = google.visualization.arrayToDataTable([
+          ['Job', job],
+          ['Student',    student ],
+          ['Professor',      prof],
+          ['Mentor',  mentor],
+          ['Business',business ],
+          ['Investors',    investor]
+        ]);
+
+        var options = {
+          title: 'My Daily Activities'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+        chart.draw(data, options);
+      }      
+ 
+        </script>
+        <script>
+        function count_status()
+{
+    var student=0;
+    var prof=0;
+    var job=0;
+    var mentor=0;
+    var business=0;
+    var investor=0;
+    firebase.database().ref("Users/Alumni/").once("value", function(snapshot){
+    snapshot.forEach(function(child){
+        if(child.key==uid)
+        {
+            child.forEach(function(mychild)
+            {
+              x=mychild.val();
+              
+              mychild.child("Status").forEach(function(childStatus)
+                {
+                    var status=childStatus.val();
+                    console.log(status);
+                    if(status.toLowerCase()=="student")
+                    {
+                        student+=1;
+                    }
+                    if(status.toLowerCase()=="job")
+                    {
+                        job+=1;
+                    }
+                    if(status.toLowerCase()=="business")
+                    {
+                        business+=1;
+                    }
+                    if(status.toLowerCase()=="investor")
+                    {
+                        investor+=1;
+                    }
+                    if(status.toLowerCase()=="mentor")
+                    {
+                        mentor+=1;
+                    }
+                    if(status.toLowerCase()=="professor")
+                    {
+                        prof+=1;
+                    }
+
+            window.localStorage.setItem("student",student);	
+            window.localStorage.setItem("job",job);	
+            window.localStorage.setItem("professor",prof);	
+            window.localStorage.setItem("mentor",mentor);	
+            window.localStorage.setItem("business",business);
+            window.localStorage.setItem("investor",investor);	
+                });
+            });
+        }
+    });
+});
+
+
+}
+</script>
+    <body>
+        
+        <h2>Students</h2>
+    <p id="student"></p>
+    <h2>Jobs</h2>
+    <p id="job"></p>
+    <h2>Business</h2>
+    <p id="business"></p>
+    <h2>Professors</h2>
+    <p id="professor"></p>
+    <h2>Investors</h2>
+    <p id="investor"></p>
+    <h2>Mentor</h2>
+    <p id="mentor"></p>
+    <script>count_status()</script>    
+    <div id="piechart" style="width: 900px; height: 500px;"></div>
+
+</body>
+</html>
